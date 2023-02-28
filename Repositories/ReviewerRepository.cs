@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using PokemonReviewApp.Data;
+using PokemonReviewApp.Dto;
 using PokemonReviewApp.Interfaces;
 using PokemonReviewApp.Models;
 
@@ -25,6 +26,14 @@ namespace PokemonReviewApp.Repositories
         {
             var saved = _context.SaveChanges();
             return saved > 0;
+        }
+
+        public bool UpdateReviewer(ReviewerUpdateDto reviewerUpdateDto, Reviewer reviewer)
+        {
+            reviewer.FirstName = reviewerUpdateDto.FirstName;
+            reviewer.LastName = reviewerUpdateDto.LastName;
+
+            return Save();
         }
 
         ICollection<Review> IReviewerRepository.GetReviewByReviewer(int Id)

@@ -1,4 +1,5 @@
 ﻿using System;
+using PokemonReviewApp.Dto;
 using PokemonReviewApp.Models;
 
 namespace PokemonReviewApp.Interfaces
@@ -11,6 +12,7 @@ namespace PokemonReviewApp.Interfaces
 		bool ReviewerExists(int Id);
 		bool CreateReviewer(Reviewer reviewer);
 		bool Save();
+		bool UpdateReviewer(ReviewerUpdateDto reviewerUpdateDto, Reviewer reviewer);
 	}
 }
 

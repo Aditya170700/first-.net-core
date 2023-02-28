@@ -93,6 +93,47 @@ namespace PokemonReviewApp.Controllers
 
             return Ok("Successfully created");
         }
+
+        [HttpPut("{Id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public IActionResult UpdateReviewer(int Id, [FromBody] ReviewerUpdateDto reviewerUpdate)
+        {
+            if (reviewerUpdate == null)
+                return BadRequest(ModelState);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var category = _reviewerRepository.GetReviewers()
+                .Where(r => r.FirstName.Trim().ToUpper() == reviewerUpdate.FirstName.Trim().ToUpper())
+                .Where(r => r.LastName.Trim().ToUpper() == reviewerUpdate.LastName.Trim().ToUpper())
+                .Where(r => r.Id != Id)
+                .FirstOrDefault();
+
+            if (category != null)
+            {
+                ModelState.AddModelError("error", "Reviewer already exists");
+                return StatusCode(422, ModelState);
+            }
+
+            var existingData = _reviewerRepository.GetReviewer(Id);
+
+            if (existingData == null)
+            {
+                ModelState.AddModelError("error", "Reviewer not found");
+                return StatusCode(404, ModelState);
+            }
+
+            if (!_reviewerRepository.UpdateReviewer(reviewerUpdate, existingData))
+            {
+                ModelState.AddModelError("error", "Something went wrong while saving data");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Successfully updated");
+        }
     }
 }
 
